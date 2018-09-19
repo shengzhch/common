@@ -8,6 +8,7 @@ import (
 	"os"
 	"errors"
 	"encoding/json"
+	"time"
 )
 
 func setField(obj interface{}, name string, value interface{}, withtag string) error {
@@ -26,7 +27,7 @@ func setField(obj interface{}, name string, value interface{}, withtag string) e
 	}
 
 	if !fieldValue.IsValid() {
-		return fmt.Errorf("No such field: %s in obj %+v", obj)
+		return fmt.Errorf("No such field: %s in obj %+v", name, obj)
 	}
 
 	if !fieldValue.CanSet() {
@@ -34,14 +35,33 @@ func setField(obj interface{}, name string, value interface{}, withtag string) e
 	}
 	fieldType := fieldValue.Type()
 	val := reflect.ValueOf(value)
+	if value == nil {
+		return nil
+	}
 	valTypeStr := val.Type().String()
 	fieldTypeStr := fieldType.String()
-	if valTypeStr == "float64" && fieldTypeStr == "int" {
+	if valTypeStr == "float64" {
 		val = val.Convert(fieldType)
-	} else if fieldType != val.Type() {
-		return fmt.Errorf("Provided value type " + valTypeStr + " didn't match obj field type " + fieldTypeStr)
+	} else {
+		var deep bool
+		switch fieldTypeStr {
+		case "time.Time":
+			v, _ := time.Parse(time.RFC3339, val.String())
+			val = reflect.ValueOf(v)
+			fieldValue.Set(val)
+		default:
+			deep = false
+		}
+		//todo 目前没有找到方法处理
+		if deep && fieldValue.Kind() == reflect.Struct {
+			var tmp = reflect.New(fieldType).Interface()
+			err := SetStruct(tmp, val.Interface().(map[string]interface{}), withtag)
+			if err != nil {
+				return err
+			}
+			val = reflect.ValueOf(tmp)
+		}
 	}
-	fieldValue.Set(val)
 	return nil
 }
 
@@ -56,11 +76,11 @@ func SetStruct(obj interface{}, defs map[string]interface{}, withtag string) err
 }
 
 func JsonFileToMap(path string) (rel map[string]interface{}, err error) {
-	file, err := os.Open("path")
+	file, err := os.Open(path)
 	if err != nil {
 		return nil, errors.New("open file failed " + err.Error())
 	}
 	defer file.Close()
-	err = json.NewDecoder(file).Decode(rel)
+	err = json.NewDecoder(file).Decode(&rel)
 	return
 }
