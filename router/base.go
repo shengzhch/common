@@ -22,7 +22,7 @@ type Handlewithlog struct {
 }
 
 func (s Handlewithlog) ServeHTTP(w http.ResponseWriter, r *http.Request) {
-	s.ServeHTTP(w, r)
+	s.Server.ServeHTTP(w, r)
 }
 
 type Router struct {
