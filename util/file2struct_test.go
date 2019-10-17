@@ -1,10 +1,10 @@
 package util
 
 import (
-	"testing"
-	"time"
 	"encoding/json"
 	"os"
+	"testing"
+	"time"
 )
 
 type TS struct {
@@ -12,7 +12,7 @@ type TS struct {
 	Age   int       `json:"age"`
 	Lengh float64   `json:"len"`
 	Time  time.Time `json:"birth"`
-	TSC   TSC      `json:"tsc"`
+	TSC   TSC       `json:"tsc"`
 	//*TSC2           `json:"tsc2"`
 }
 type TSC struct {

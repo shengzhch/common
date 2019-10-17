@@ -2,14 +2,14 @@ package router
 
 import (
 	"context"
-	"net/http"
-	"net/url"
+	"github.com/gin-gonic/gin/json"
+	kithttp "github.com/go-kit/kit/transport/http"
+	"github.com/gorilla/mux"
 	"io"
 	"mime/multipart"
-	"github.com/gorilla/mux"
-	kithttp "github.com/go-kit/kit/transport/http"
+	"net/http"
+	"net/url"
 	"reflect"
-	"github.com/gin-gonic/gin/json"
 )
 
 type Request struct {

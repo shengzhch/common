@@ -2,12 +2,12 @@
 package util
 
 import (
-	"reflect"
-	"fmt"
-	"strings"
-	"os"
-	"errors"
 	"encoding/json"
+	"errors"
+	"fmt"
+	"os"
+	"reflect"
+	"strings"
 	"time"
 )
 

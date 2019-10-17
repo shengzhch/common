@@ -5,14 +5,14 @@ import (
 	"errors"
 
 	"fmt"
-	"time"
 	"sync"
+	"time"
 )
 
 type State int
 
 const (
-	StateClosed   State = iota
+	StateClosed State = iota
 	StateHalfOpen
 	StateOpen
 )
@@ -45,7 +45,7 @@ type Counts struct {
 
 //请求
 func (c *Counts) onRequest() {
-	c.Requests ++
+	c.Requests++
 }
 
 //成功
@@ -65,10 +65,10 @@ func (c *Counts) onFailure() {
 //清除归零
 func (c *Counts) clear() {
 	c.Requests = 0
-	c.TotalSuccesses = 0;
-	c.TotalFailures = 0;
-	c.ConsecutiveSuccesses = 0;
-	c.ConsecutiveFailures = 0;
+	c.TotalSuccesses = 0
+	c.TotalFailures = 0
+	c.ConsecutiveSuccesses = 0
+	c.ConsecutiveFailures = 0
 }
 
 //设置
@@ -104,7 +104,6 @@ type CircuitBreaker struct {
 	count      Counts
 	expiry     time.Time
 }
-
 
 //
 type TwoStepCircuitBreaker struct {
@@ -291,7 +290,7 @@ func (cb *CircuitBreaker) setState(state State, now time.Time) {
 }
 
 func (cb *CircuitBreaker) toNewGeneration(now time.Time) {
-	cb.generation ++
+	cb.generation++
 	cb.count.clear()
 	var zero time.Time
 	switch cb.state {
